@@ -6,7 +6,7 @@ import type { ExecutionStatus, IRunExecutionData, WorkflowExecuteMode } from 'n8
 
 import type { ExecutionRedactionOptions } from '@/executions/execution-redaction';
 import { ForbiddenError } from '@/errors/response-errors/forbidden.error';
-import { EventService } from '@/events/event.service';
+import type { EventService } from '@/events/event.service';
 import { WorkflowFinderService } from '@/workflows/workflow-finder.service';
 
 import { ExecutionRedactionService } from '../execution-redaction.service';

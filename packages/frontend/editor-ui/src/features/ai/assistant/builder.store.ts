@@ -52,6 +52,8 @@ import {
 	isPlanModePlanMessage,
 	isPlanModeQuestionsMessage,
 	isWebFetchApprovalCustomMessage,
+	isWebFetchApprovalMessage,
+	isToolMessage as isApiToolMessage,
 } from '@/features/ai/assistant/assistant.types';
 import { useFocusedNodesStore } from '@/features/ai/assistant/focusedNodes.store';
 import { useCodeDiff } from '@/features/ai/assistant/composables/useCodeDiff';
@@ -75,7 +77,10 @@ export type WorkflowBuilderJourneyEventType =
 	| 'user_switched_builder_mode'
 	| 'user_clicked_implement_plan'
 	| 'user_opened_review_changes'
-	| 'user_closed_review_changes';
+	| 'user_closed_review_changes'
+	| 'web_fetch_approval_prompted'
+	| 'web_fetch_decision'
+	| 'web_fetch_completed';
 
 interface WorkflowBuilderJourneyEventProperties {
 	node_type?: string;
@@ -87,6 +92,10 @@ interface WorkflowBuilderJourneyEventProperties {
 	no_versions_reverted?: number;
 	completion_type?: 'workflow-ready' | 'input-needed';
 	mode?: 'plan' | 'build';
+	domain?: string;
+	url?: string;
+	decision?: 'allow_once' | 'allow_domain' | 'deny';
+	status?: string;
 }
 
 interface WorkflowBuilderJourneyPayload extends ITelemetryTrackProperties {
@@ -858,6 +867,25 @@ export const useBuilderStore = defineStore(STORES.BUILDER, () => {
 						retry,
 					);
 					chatMessages.value = result.messages;
+
+					// Track web-fetch lifecycle events
+					for (const msg of response.messages) {
+						if (isWebFetchApprovalMessage(msg)) {
+							trackWorkflowBuilderJourney('web_fetch_approval_prompted', {
+								domain: msg.domain,
+								url: msg.url,
+							});
+						}
+						if (
+							isApiToolMessage(msg) &&
+							msg.toolName === 'web_fetch' &&
+							(msg.status === 'completed' || msg.status === 'error')
+						) {
+							trackWorkflowBuilderJourney('web_fetch_completed', {
+								status: msg.status,
+							});
+						}
+					}
 
 					if (result.shouldClearThinking) {
 						builderThinkingMessage.value = undefined;

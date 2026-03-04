@@ -1,4 +1,3 @@
-// import {parser, configureNesting} from "@lezer/html"
 import { parser, configureNesting } from './grammar/index.js';
 import { Parser } from '@lezer/common';
 import { cssLanguage, css } from '@codemirror/lang-css';
@@ -18,8 +17,9 @@ import {
 	LanguageSupport,
 	syntaxTree,
 } from '@codemirror/language';
-import { elementName, htmlCompletionSourceWith, TagSpec, eventAttributes } from './complete';
-export { htmlCompletionSource, TagSpec, htmlCompletionSourceWith } from './complete';
+import { elementName, htmlCompletionSourceWith, TagSpec, eventAttributes } from './complete.js';
+export { htmlCompletionSource, htmlCompletionSourceWith } from './complete.js';
+export type { TagSpec } from './complete.js';
 
 type NestedLang = {
 	tag: string;

@@ -12,10 +12,11 @@ RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
 WORKDIR /build
 
 # Copy workspace config files first (better layer caching)
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY patches/ ./patches/
+COPY scripts/ ./scripts/
 
-# Copy all package.json files to resolve workspace dependencies
+# Copy all packages to resolve workspace dependencies
 COPY packages/ ./packages/
 
 # Install all dependencies

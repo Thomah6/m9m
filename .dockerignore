@@ -4,6 +4,18 @@
 # Ignore everything first
 *
 
+# === Source build (multi-stage) ===
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!tsconfig.json
+!patches
+!patches/**
+!packages
+!packages/**
+!scripts
+!scripts/**
+
 # === n8n main image (docker/images/n8n/Dockerfile) ===
 !compiled
 !compiled/**
@@ -13,10 +25,6 @@
 !dist
 !dist/task-runner-javascript
 !dist/task-runner-javascript/**
-!packages
-!packages/@n8n
-!packages/@n8n/task-runner-python
-!packages/@n8n/task-runner-python/**
 
 # === Docker build files (entrypoints, configs) ===
 !docker
@@ -26,15 +34,44 @@
 !docker/images/runners
 !docker/images/runners/n8n-task-runners.json
 
-# === benchmark image (packages/@n8n/benchmark/Dockerfile) ===
-!package.json
-!pnpm-lock.yaml
-!pnpm-workspace.yaml
-!patches
-!patches/**
-!scripts
-!scripts/**
-!packages/@n8n/benchmark
-!packages/@n8n/benchmark/**
-!packages/@n8n/typescript-config
-!packages/@n8n/typescript-config/**
+# === Exclude unnecessary files from allowed directories ===
+**/.git
+**/.gitignore
+**/.gitattributes
+**/node_modules
+**/.turbo
+**/.vscode
+**/.devcontainer
+**/.github
+**/.claude
+**/coverage
+**/*.test.*
+**/*.spec.*
+**/__tests__
+**/__mocks__
+**/test
+**/tests
+**/.storybook
+**/storybook
+**/*.stories.*
+**/*.md
+!THIRD_PARTY_LICENSES.md
+**/*.map
+**/CHANGELOG*
+**/LICENSE*
+**/.editorconfig
+**/.prettierrc*
+**/.prettierignore
+**/.npmignore
+**/.npmrc
+**/biome.jsonc
+**/codecov.yml
+**/renovate.json
+**/lefthook.yml
+**/vitest.workspace.ts
+**/.actrc
+**/.poutine.yml
+**/cubic.yaml
+**/jest.config.*
+**/AGENTS.md
+**/CLAUDE.md

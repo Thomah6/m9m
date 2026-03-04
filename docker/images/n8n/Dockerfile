@@ -11,6 +11,9 @@ RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
 
 WORKDIR /build
 
+# Set environment variable for n8n scripts to recognize Docker/CI environment
+ENV DOCKER_BUILD=true
+
 # Copy workspace config files first (better layer caching)
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY patches/ ./patches/
@@ -19,8 +22,8 @@ COPY scripts/ ./scripts/
 # Copy all packages to resolve workspace dependencies
 COPY packages/ ./packages/
 
-# Install all dependencies
-RUN pnpm install --frozen-lockfile
+# Install all dependencies without running scripts initially
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Build the entire project
 RUN pnpm build

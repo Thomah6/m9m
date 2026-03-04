@@ -26,6 +26,9 @@ COPY packages/ ./packages/
 # Install all dependencies without running scripts initially
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
+# Build native dependencies that require compilation
+RUN pnpm rebuild isolated-vm
+
 # Build the entire project
 RUN pnpm build
 

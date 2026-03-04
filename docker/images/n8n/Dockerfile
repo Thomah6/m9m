@@ -26,11 +26,11 @@ COPY packages/ ./packages/
 # Install all dependencies without running scripts initially
 RUN pnpm install --no-frozen-lockfile --ignore-scripts
 
-# Build native dependencies that require compilation (recursive for workspaces)
-RUN pnpm rebuild -r isolated-vm
+# Build native dependencies that require compilation (recursive for all workspaces)
+RUN pnpm rebuild -r
 
 # Build the entire project
-RUN NODE_OPTIONS="--max-old-space-size=4096" pnpm build
+RUN NODE_OPTIONS="--max-old-space-size=8192" pnpm build
 
 # Generate pruned production deployment into /build/compiled
 RUN NODE_ENV=production DOCKER_BUILD=true pnpm --filter=n8n --prod --legacy deploy --no-optional ./compiled

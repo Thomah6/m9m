@@ -4,7 +4,7 @@ ARG NODE_VERSION=24.13.1
 FROM node:${NODE_VERSION}-alpine AS builder
 
 # Install build dependencies
-RUN apk add --no-cache python3 make g++ git
+RUN apk add --no-cache python3 make g++ git libstdc++ gcompat
 
 # Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
@@ -26,11 +26,11 @@ COPY packages/ ./packages/
 # Install all dependencies without running scripts initially
 RUN pnpm install --no-frozen-lockfile --ignore-scripts
 
-# Build native dependencies that require compilation
-RUN pnpm rebuild isolated-vm
+# Build native dependencies that require compilation (recursive for workspaces)
+RUN pnpm rebuild -r isolated-vm
 
 # Build the entire project
-RUN pnpm build
+RUN NODE_OPTIONS="--max-old-space-size=4096" pnpm build
 
 # Generate pruned production deployment into /build/compiled
 RUN NODE_ENV=production DOCKER_BUILD=true pnpm --filter=n8n --prod --legacy deploy --no-optional ./compiled

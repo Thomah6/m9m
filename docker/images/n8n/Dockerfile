@@ -16,6 +16,7 @@ ENV DOCKER_BUILD=true
 
 # Copy workspace config files first (better layer caching)
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY tsconfig.json turbo.json biome.jsonc vitest.workspace.ts ./
 COPY patches/ ./patches/
 COPY scripts/ ./scripts/
 

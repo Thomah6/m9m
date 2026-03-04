@@ -64,7 +64,6 @@
 **/.prettierrc*
 **/.prettierignore
 **/.npmignore
-**/.npmrc
 **/biome.jsonc
 **/codecov.yml
 **/renovate.json

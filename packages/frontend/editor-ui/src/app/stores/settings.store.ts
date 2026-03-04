@@ -190,6 +190,7 @@ export const useSettingsStore = defineStore(STORES.SETTINGS, () => {
 	const endpointHealth = computed(() => settings.value.endpointHealth);
 
 	const setSettings = (newSettings: FrontendSettings) => {
+		if (!newSettings) return;
 		settings.value = newSettings;
 
 		userManagement.value = newSettings.userManagement;

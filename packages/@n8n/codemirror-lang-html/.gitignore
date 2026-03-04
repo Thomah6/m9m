@@ -5,7 +5,7 @@
 /test/*.d.ts.map
 .tern-*
 
-/src/grammar/parser.*
+# /src/grammar/parser.*
 /src/grammar/dist
 
 .DS_Store

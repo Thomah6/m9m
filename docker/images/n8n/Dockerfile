@@ -1,10 +1,10 @@
 ARG NODE_VERSION=24.13.1
 
-# ========== Stage 1: Build from source ==========
-FROM node:${NODE_VERSION}-alpine AS builder
+# ========== Stage 1: Build from source (Debian for full glibc compatibility) ==========
+FROM node:${NODE_VERSION} AS builder
 
 # Install build dependencies
-RUN apk add --no-cache python3 make g++ git libstdc++ gcompat
+RUN apt-get update && apt-get install -y python3 make g++ git && rm -rf /var/lib/apt/lists/*
 
 # Enable corepack for pnpm
 RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
@@ -23,10 +23,10 @@ COPY scripts/ ./scripts/
 # Copy all packages to resolve workspace dependencies
 COPY packages/ ./packages/
 
-# Install all dependencies without running scripts initially
-RUN pnpm install --no-frozen-lockfile --ignore-scripts
+# Install all dependencies
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Build native dependencies that require compilation (recursive for all workspaces)
+# Build native dependencies
 RUN pnpm rebuild -r
 
 # Build the entire project
@@ -35,7 +35,7 @@ RUN NODE_OPTIONS="--max-old-space-size=8192" pnpm build
 # Generate pruned production deployment into /build/compiled
 RUN NODE_ENV=production DOCKER_BUILD=true pnpm --filter=n8n --prod --legacy deploy --no-optional ./compiled
 
-# ========== Stage 2: Production image ==========
+# ========== Stage 2: Production image (Alpine for small size) ==========
 FROM n8nio/base:${NODE_VERSION}
 
 ARG N8N_VERSION=snapshot

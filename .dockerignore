@@ -67,11 +67,9 @@
 **/.prettierrc*
 **/.prettierignore
 **/.npmignore
-**/biome.jsonc
 **/codecov.yml
 **/renovate.json
 **/lefthook.yml
-**/vitest.workspace.ts
 **/.actrc
 **/.poutine.yml
 **/cubic.yaml

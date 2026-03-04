@@ -48,6 +48,7 @@ WORKDIR /home/node
 
 COPY --from=builder /build/compiled /usr/local/lib/node_modules/n8n
 COPY docker/images/n8n/docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
 
 RUN cd /usr/local/lib/node_modules/n8n && \
     npm rebuild sqlite3 && \

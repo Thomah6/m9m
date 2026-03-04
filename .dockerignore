@@ -10,6 +10,9 @@
 !pnpm-workspace.yaml
 !.npmrc
 !tsconfig.json
+!turbo.json
+!biome.jsonc
+!vitest.workspace.ts
 !patches
 !patches/**
 !packages
